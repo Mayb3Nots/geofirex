@@ -1,10 +1,11 @@
-import { collection, CollectionReference, endAt, getFirestore, orderBy, query, Query, startAt, onSnapshot, QuerySnapshot } from "firebase/firestore";
+
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { finalize, first, map, shareReplay, takeUntil } from 'rxjs/operators';
 import { FeatureCollection, Geometry } from './interfaces';
 import { bearing, distance, neighbors, setPrecision, toGeoJSONFeature } from './util';
 import { FirePoint } from './client';
-import { FirebaseApp } from 'firebase/app';
+import { firestore } from "firebase-admin";
+import { CollectionReference, Query, QuerySnapshot, DocumentSnapshot } from "firebase-admin/firestore";
 
 export type QueryFn = (
   ref: CollectionReference
@@ -28,12 +29,12 @@ export interface GeoQueryDocument {
 export class GeoFireQuery<T = any> {
   private readonly ref: CollectionReference;
   constructor(
-    private app: FirebaseApp,
+    private app: firestore.Firestore,
     private refString?: string
   ) {
     if (typeof refString === 'string') {
-      const db = getFirestore(app);
-      this.ref = collection(db, refString);
+
+      this.ref = app.collection(refString);
 
       // this.ref = this.app.firestore().collection(ref);
     }
@@ -126,12 +127,10 @@ export class GeoFireQuery<T = any> {
 
   private queryPoint(geohash: string, field: string): Query {
     const end = geohash + '~';
-    return query(this.ref, orderBy(`${field}.geohash`), startAt(geohash), endAt(end));
-
-    /*return (this.ref as CollectionReference)
+    return (this.ref as CollectionReference)
       .orderBy(`${field}.geohash`)
       .startAt(geohash)
-      .endAt(end);*/
+      .endAt(end);
   }
 
   // withinBbox(field: string, bbox: number, opts = defaultOpts) {
@@ -164,11 +163,11 @@ internal, do not use. Converts callback to Observable.
  */
 function createStream(input: Query): Observable<any> {
   return new Observable(observer => {
-    const unsubscribe = onSnapshot(
-      input,
+    const unsubscribe = input.onSnapshot(
       val => observer.next(val),
-      err => observer.error(err)
+      err => observer.error(err),
     );
+
     return { unsubscribe };
   });
 }

@@ -1,7 +1,7 @@
-import { CollectionReference, Query } from "firebase/firestore";
 import { Observable } from 'rxjs';
 import { FirePoint } from './client';
-import { FirebaseApp } from 'firebase/app';
+import { firestore } from "firebase-admin";
+import { CollectionReference, Query } from "firebase-admin/firestore";
 export type QueryFn = (ref: CollectionReference) => Query;
 export interface GeoQueryOptions {
     units?: 'km';
@@ -18,7 +18,7 @@ export declare class GeoFireQuery<T = any> {
     private app;
     private refString?;
     private readonly ref;
-    constructor(app: FirebaseApp, refString?: string);
+    constructor(app: firestore.Firestore, refString?: string);
     /**
      * Queries the Firestore collection based on geograpic radius
      * @param  {FirePoint} center the starting point for the query, i.e gfx.point(lat, lng)

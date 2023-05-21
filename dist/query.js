@@ -1,5 +1,4 @@
 import { __assign } from "tslib";
-import { collection, endAt, getFirestore, orderBy, query, startAt, onSnapshot } from "firebase/firestore";
 import { combineLatest, Observable, Subject } from 'rxjs';
 import { finalize, first, map, shareReplay, takeUntil } from 'rxjs/operators';
 import { bearing, distance, neighbors, setPrecision, toGeoJSONFeature } from './util';
@@ -9,8 +8,7 @@ var GeoFireQuery = /** @class */ (function () {
         this.app = app;
         this.refString = refString;
         if (typeof refString === 'string') {
-            var db = getFirestore(app);
-            this.ref = collection(db, refString);
+            this.ref = app.collection(refString);
             // this.ref = this.app.firestore().collection(ref);
         }
     }
@@ -77,11 +75,10 @@ var GeoFireQuery = /** @class */ (function () {
     };
     GeoFireQuery.prototype.queryPoint = function (geohash, field) {
         var end = geohash + '~';
-        return query(this.ref, orderBy("".concat(field, ".geohash")), startAt(geohash), endAt(end));
-        /*return (this.ref as CollectionReference)
-          .orderBy(`${field}.geohash`)
-          .startAt(geohash)
-          .endAt(end);*/
+        return this.ref
+            .orderBy("".concat(field, ".geohash"))
+            .startAt(geohash)
+            .endAt(end);
     };
     return GeoFireQuery;
 }());
@@ -100,7 +97,7 @@ internal, do not use. Converts callback to Observable.
  */
 function createStream(input) {
     return new Observable(function (observer) {
-        var unsubscribe = onSnapshot(input, function (val) { return observer.next(val); }, function (err) { return observer.error(err); });
+        var unsubscribe = input.onSnapshot(function (val) { return observer.next(val); }, function (err) { return observer.error(err); });
         return { unsubscribe: unsubscribe };
     });
 }

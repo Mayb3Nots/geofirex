@@ -1,13 +1,13 @@
 import { GeoFireQuery } from './query';
 import { GeoPoint } from 'firebase-admin/firestore';
-import { FirebaseApp } from 'firebase/app';
+import { firestore } from 'firebase-admin';
 export interface FirePoint {
     geopoint: GeoPoint;
     geohash: string;
 }
 export declare class GeoFireClient {
-    app: FirebaseApp;
-    constructor(app: FirebaseApp);
+    app: firestore.Firestore;
+    constructor(app: firestore.Firestore);
     /**
      * Creates reference to a Firestore collection that can be used to make geoqueries
      * @param  {firestore.CollectionReference | firestore.Query | string} ref path to collection
@@ -41,4 +41,4 @@ export declare class GeoFireClient {
  * @param  {FirebaseApp} app
  * @returns GeoFireClient
  */
-export declare function init(app: FirebaseApp): GeoFireClient;
+export declare function init(app: firestore.Firestore): GeoFireClient;
