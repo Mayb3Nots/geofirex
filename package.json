@@ -66,6 +66,7 @@
     "typescript": "^5.0.4"
   },
   "dependencies": {
+    "firebase": "^9.22.0",
     "firebase-admin": "^11.8.0"
   }
 }

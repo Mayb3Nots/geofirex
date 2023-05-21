@@ -1,9 +1,9 @@
-import {collection, CollectionReference, endAt, getFirestore, orderBy, query, Query, startAt, onSnapshot, QuerySnapshot} from "firebase/firestore";
-import {combineLatest, Observable, Subject} from 'rxjs';
-import {finalize, first, map, shareReplay, takeUntil} from 'rxjs/operators';
-import {FeatureCollection, Geometry} from './interfaces';
-import {bearing, distance, neighbors, setPrecision, toGeoJSONFeature} from './util';
-import {FirePoint} from './client';
+import { collection, CollectionReference, endAt, getFirestore, orderBy, query, Query, startAt, onSnapshot, QuerySnapshot } from "firebase/firestore";
+import { combineLatest, Observable, Subject } from 'rxjs';
+import { finalize, first, map, shareReplay, takeUntil } from 'rxjs/operators';
+import { FeatureCollection, Geometry } from './interfaces';
+import { bearing, distance, neighbors, setPrecision, toGeoJSONFeature } from './util';
+import { FirePoint } from './client';
 import { FirebaseApp } from 'firebase/app';
 
 export type QueryFn = (
@@ -165,9 +165,9 @@ internal, do not use. Converts callback to Observable.
 function createStream(input: Query): Observable<any> {
   return new Observable(observer => {
     const unsubscribe = onSnapshot(
-        input,
-        val => observer.next(val),
-        err => observer.error(err)
+      input,
+      val => observer.next(val),
+      err => observer.error(err)
     );
     return { unsubscribe };
   });
