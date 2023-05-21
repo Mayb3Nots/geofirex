@@ -3,8 +3,7 @@
   "version": "0.1.8",
   "description": "Realtime Firestore GeoQueries with RxJS",
   "main": "dist/index.js",
-  "module": "dist/index.js",
-  "types": "dist/index.ts",
+  "types": "dist/index.d.ts",
   "files": [
     "dist/**/*",
     "README.md"
